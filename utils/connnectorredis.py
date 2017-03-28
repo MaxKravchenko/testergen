@@ -1,11 +1,9 @@
-from abc import *
+import utils.connector
 
-class Connector(metaclass = ABCMeta):
+class ConnectorRedis(Connector):
 
-    @abstractmethod
     def Connect(self, connectionString):
         return connector
 
-    @abstractmethod
     def CloseConnection(self, connectionString):
         pass

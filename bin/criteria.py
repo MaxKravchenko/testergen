@@ -1,6 +1,4 @@
-class Config:
+class Criteria:
 
     def __init__(self):
         pass
-
-    # list attributes

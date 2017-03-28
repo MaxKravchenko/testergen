@@ -1,14 +1,9 @@
-from abc import *
-import utils.connector
-import bin.criteria
-import bin.order
+import bin.repository
 
-class Repository(metaclass = ABCMeta):
+class RepositoryMongo(Repository):
 
-    @abstractmethod
     def setColecction(self, connectorObj, dataCollection, criteriaObj):
         pass
 
-    @abstractmethod
     def getColecction(self, connectorObj, criteriaObj):
         return dataCollection
