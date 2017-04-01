@@ -1,5 +1,6 @@
-import bin.order
-import config.config
+import classes.order
+from classes import config
+
 
 class Generator():
 

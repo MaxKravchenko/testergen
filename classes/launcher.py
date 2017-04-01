@@ -1,4 +1,4 @@
-import bin.setup
+import classes.setup
 
 class Launcher():
 

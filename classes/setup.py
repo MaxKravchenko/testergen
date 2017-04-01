@@ -1,9 +1,8 @@
-import config.config
-import bin.generator
-import bin.repository
-import bin.repositorymongo
-import bin.repositoryredis
-import bin.workflowengine
+import classes.generator
+import classes.repository
+import classes.repositorymongo
+import classes.repositoryredis
+import classes.workflowengine
 import report.report
 import report.reporthtml
 import report.reportpdf
@@ -16,6 +15,8 @@ import utils.cleanerredis
 import utils.connector
 import utils.connectormongo
 import utils.connnectorredis
+from classes import config
+
 
 class Setup():
 

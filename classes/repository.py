@@ -1,7 +1,7 @@
 from abc import *
 import utils.connector
-import bin.criteria
-import bin.order
+import classes.criteria
+import classes.order
 
 class Repository(metaclass = ABCMeta):
 

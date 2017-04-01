@@ -1,4 +1,4 @@
-import bin.repository
+import classes.repository
 
 class RepositoryMongo(Repository):
 

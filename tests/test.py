@@ -1,5 +1,7 @@
 from abc import *
-import config.config
+
+from classes import config
+
 
 class Test(metaclass = ABCMeta):
 
