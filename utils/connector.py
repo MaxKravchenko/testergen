@@ -1,11 +1,13 @@
-from abc import *
+from abc import ABCMeta, abstractmethod
 
-class Connector(metaclass = ABCMeta):
-
-    @abstractmethod
-    def Connect(self, connectionString):
-        return connector
+class Connector():
+    __metaclass__ = ABCMeta
 
     @abstractmethod
-    def CloseConnection(self, connectionString):
+    def setConnection(self, hostString, portString, dbString):
         pass
+
+    @abstractmethod
+    def closeConnection(self):
+        pass
+
