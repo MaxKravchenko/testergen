@@ -7,33 +7,70 @@ class Config(object):
             cls.obj = object.__new__(cls, *args, **kwargs)
         return cls.obj
 
-    #list parameters
-    countOrders = 1001
-    stateOrder = {'new': 0, 'fill': 1, 'partial_fill': 2, 'reject': 8}
-    stateOrderForTest = ('fill', 'partial_fill', 'reject')
-    stateRange = {'1': 0.6, '2': 0.1, '8': 0.3}
-    listInstrument = ('EUR/USD', 'AUD/CAD', 'CHF/GBP', 'CHF/USD')
-    listInstrumentPrice = {'EUR/USD': 1.05942, 'AUD/CAD': 0.99862, 'CHF/GBP': 0.79363, 'CHF/USD': 0.99427}
-    deltaPxOrder = 0.05
-    deltaVolumeForPartialFill = 0.5
-    volumeOrders = (1000, 100000)
-    direct = ('buy', 'sell')
-    fromYear = 2017
-    fromMonth = 02
-    fromDate = 24
-    toYear = 2017
-    toMonth = 02
-    toDate = 26
-    templateForSqlQueryStart = 'INSERT INTO orders (Id,State,Instrument,Date,Px,Volume,PxF,VolumeF,Direct) VALUES ('
-    templateForSqlQueryEnd = ');\n'
-    templateForMongoQueryStart = 'db.orders.insert({'
-    templateForMongoQueryEnd = '})\n'
-    nameFileForSqlQuery = 'orders.sql'
-    nameFileForMongoQuery = 'orders.json'
-    listField = ('idOrder', 'stateOrder', 'instrument', 'dateOrder', 'pxOrder', 'volumeOrder', 'pxfOrder', 'volumefOrder', 'directOrder')
-    fileNameTest1 = 'result_test1.txt'
-    fileNameTest2 = 'result_test2.txt'
+    def __init__(self):
+        #list parameters
+        self.countOrders = 1001
+        self.stateOrder = {'new': 0,
+                           'fill': 1,
+                           'partial_fill': 2,
+                           'reject': 8}
+        self.stateOrderForTest = ('fill',
+                                  'partial_fill',
+                                  'reject')
+        self.stateRange = {'1': 0.6,
+                           '2': 0.1,
+                           '8': 0.3}
+        self.listInstrument = ('EUR/USD', 'AUD/CAD', 'CHF/GBP', 'CHF/USD')
+        self.listInstrumentPrice = {'EUR/USD': 1.05942,
+                                    'AUD/CAD': 0.99862,
+                                    'CHF/GBP': 0.79363,
+                                    'CHF/USD': 0.99427}
+        self.deltaPxOrder = 0.05
+        self.deltaVolumeForPartialFill = 0.5
+        self.volumeOrders = (1000, 100000)
+        self.direct = ('buy', 'sell')
 
+        #interval period
+        self.fromYear = 2017
+        self.fromMonth = 02
+        self.fromDate = 24
+        self.toYear = 2017
+        self.toMonth = 02
+        self.toDate = 26
+
+        #for sql insert
+        self.templateForSqlQueryStart = 'INSERT INTO orders (Id,State,Instrument,Date,Px,Volume,PxF,VolumeF,Direct) VALUES ('
+        self.templateForSqlQueryEnd = ');\n'
+        self.nameFileForSqlQuery = 'orders.sql'
+
+        #for mongodb
+        self.templateForMongoQueryStart = 'db.orders.insert({'
+        self.templateForMongoQueryEnd = '})\n'
+        self.nameFileForMongoQuery = 'orders.json'
+
+        #for validate structure orders
+        self.listField = ('idOrder',
+                          'stateOrder',
+                          'instrument',
+                          'dateOrder',
+                          'pxOrder',
+                          'volumeOrder',
+                          'pxfOrder',
+                          'volumefOrder',
+                          'directOrder')
+        #report files
+        self.fileNameTest1 = 'result_test1.txt'
+        self.fileNameTest2 = 'result_test2.txt'
+
+        #connection options for mongodb
+        self.hostMongo = 'localhost'
+        self.portMongo = 27017
+        self.dbMongo = 'test'
+
+        #connection options for redis
+        self.hostRedis = 'localhost'
+        self.portRedis = 6379
+        self.dbRedis = '0'
 
 
 

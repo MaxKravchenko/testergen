@@ -3,8 +3,12 @@ from abc import ABCMeta, abstractmethod
 class Connector():
     __metaclass__ = ABCMeta
 
+    def __init__(self, confObj):
+        #link on configuration object
+        self.conf = confObj
+
     @abstractmethod
-    def setConnection(self, hostString, portString, dbString):
+    def setConnection(self):
         pass
 
     @abstractmethod
