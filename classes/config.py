@@ -72,5 +72,8 @@ class Config(object):
         self.portRedis = 6379
         self.dbRedis = '0'
 
+        #File for log
+        self.logFile = '../testergen.log'
+
 
 
