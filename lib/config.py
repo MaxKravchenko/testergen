@@ -75,5 +75,10 @@ class Config(object):
         #File for log
         self.logFile = '../testergen.log'
 
-
-
+        #collection objects for application
+        self.collectionObjects = {'log': None,
+                                    'connectorMongo': None,
+                                     'connectorRedis': None,
+                                     'reportHTML': None,
+                                     'reportPDF': None,
+                                     'test1': None}

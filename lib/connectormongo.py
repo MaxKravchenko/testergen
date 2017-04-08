@@ -1,6 +1,8 @@
 import connector as conn
 import pymongo
 
+
+
 class ConnectorMongo(conn.Connector):
     '''Class for connect to MongoDB'''
     def __init__(self, confObj):

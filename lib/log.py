@@ -3,8 +3,13 @@ import logging
 class Log():
     '''Class for logging'''
 
-    @staticmethod
-    def setConfig(nameLogFile):
+    obj = None
+    def __new__(cls, *args, **kwargs):
+        if cls.obj is None:
+            cls.obj = object.__new__(cls, *args, **kwargs)
+        return cls.obj
+
+    def __init__(self, nameLogFile):
         logging.basicConfig(
             level=logging.DEBUG,
             format='%(asctime)s : %(levelname)s : %(message)s',
@@ -12,15 +17,11 @@ class Log():
             filemode='w'
         )
 
-    @staticmethod
-    def debug(message):
-        logging.debug(message)
+    def debug(message, linkObj):
+        logging.debug(message + type(linkObj))
 
-    @staticmethod
-    def info(message):
-        logging.info(message)
+    def info(message, linkObj):
+        logging.info(message + type(linkObj))
 
-    @staticmethod
-    def warning(message):
-        logging.warning(message)
-
+    def warning(message, linkObj):
+        logging.warning(message + type(linkObj))
