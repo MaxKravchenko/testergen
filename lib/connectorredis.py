@@ -1,12 +1,12 @@
-import utils.connector
+import connector
 import redis
 #import classes.config
 
-class ConnectorRedis(utils.connector.Connector):
+class ConnectorRedis(connector.Connector):
     '''Class for connect to Redis'''
 
     def __init__(self, confObj):
-        utils.connector.Connector.__init__(self, confObj)
+        connector.Connector.__init__(self, confObj)
 
     def setConnection(self):
         self.conn = redis.StrictRedis(host=self.conf.hostRedis,
