@@ -1,7 +1,10 @@
-import utils.cleaner
-import utils.connector
+import cleaner
 
-class CleanerRedis(Cleaner):
+class CleanerRedis(cleaner.Cleaner):
 
-    def CleanBD(self, connectorObj):
-        pass
+    def __init__(self, confObj):
+        cleaner.Cleaner.__init__(self, confObj)
+
+    def cleanDB(self):
+        result = self.conf.collectionObjects['connectorRedis'].cleanDB(self.conf.nameCollectionRedis)
+        return result

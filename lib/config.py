@@ -1,6 +1,6 @@
 class Config(object):
     '''Contain parameters for program '''
-
+    
     obj = None
     def __new__(cls, *args, **kwargs):
         if cls.obj is None:
@@ -66,11 +66,13 @@ class Config(object):
         self.hostMongo = 'localhost'
         self.portMongo = 27017
         self.dbMongo = 'test'
+        self.nameCollectionMongo = 'orders'
 
         #connection options for redis
         self.hostRedis = 'localhost'
         self.portRedis = 6379
         self.dbRedis = '0'
+        self.nameCollectionRedis = None
 
         #File for log
         self.logFile = 'testergen.log'
@@ -78,4 +80,6 @@ class Config(object):
         #collection objects for application
         self.collectionObjects = {'log': None,
                                     'connectorMongo': None,
-                                     'connectorRedis': None}
+                                     'connectorRedis': None,
+                                     'cleanerMongo': None,
+                                     'cleanerRedis': None}

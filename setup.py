@@ -1,6 +1,6 @@
 # import cleaner
-# import cleanermongo
-# import cleanerredis
+import lib.cleanermongo as cleanermongo
+import lib.cleanerredis as cleanerredis
 import lib.config as conf
 import lib.connector as connector
 import lib.connectormongo as connectormongo
@@ -21,27 +21,34 @@ class Setup():
         self.confObj.collectionObjects['log'] = log.Log(self.confObj)
         self.confObj.collectionObjects['connectorMongo'] = connectormongo.ConnectorMongo(self.confObj)
         self.confObj.collectionObjects['connectorRedis'] = connectorredis.ConnectorRedis(self.confObj)
+        self.confObj.collectionObjects['cleanerMongo'] = cleanermongo.CleanerMongo(self.confObj)
+        self.confObj.collectionObjects['cleanerRedis'] = cleanerredis.CleanerRedis(self.confObj)
 
-c = Setup()
-c.createObjects()
-c.confObj.collectionObjects['connectorRedis'].setConnection()
-c.confObj.collectionObjects['connectorMongo'].setConnection()
+        for nameObj, linkObj in self.confObj.collectionObjects.items():
+            if linkObj is not None:
+                self.confObj.collectionObjects['log'].info('Object created successful', linkObj)
+            else:
+                self.conf.collectionObjects['log'].warning('Object' + nameObj + 'not created in class', self)
+                print 'Object' + nameObj + 'not created'
+                return 'NOT OK'
+        return 'OK'
 
+    def setConnections(self):
+        connectors = [self.confObj.collectionObjects['connectorMongo'], self.confObj.collectionObjects['connectorRedis']]
+        for connector in connectors:
+            try:
+                connector.setConnection()
+            except Exception as e:
+                print e
+                return 'NOT OK'
 
-# print c.confObj.collectionObjects['connectorRedis'].getDataRequest('test')
-# post = {'key1': 10, 'key2': 10, 'key3': 10}
-# c.confObj.collectionObjects['connectorRedis'].execRequest(post, None)
-# c.confObj.collectionObjects['connectorRedis'].cleanDB(None)
-# c.confObj.collectionObjects['connectorRedis'].closeConnection()
+    def cleanBases(self):
+        cleaners = [self.confObj.collectionObjects['cleanerMongo'], self.confObj.collectionObjects['cleanerRedis']]
+        for cleaner in cleaners:
+            cleaner.cleanDB()
+        return 'OK'
 
-# c.confObj.collectionObjects['connectorMongo'].setConnection()
-# for nameClass, linkObj in c.confObj.collectionObjects.items():
-    # print 'Class {0} Object {1}'.format(nameClass, linkObj)
-# orders = c.confObj.collectionAObjects['connectorMongo'].getDataRequest('orders')
-# for data in orders.find():
-    # print data
-# print c.confObj.collectionObjects['connectorMongo'].countRowDB('orders')
-# post = {'key1': 1, 'key2': 'str', 'key3': 5}
-# c.confObj.collectionObjects['connectorMongo'].execRequest(post, 'orders')
-# c.confObj.collectionObjects['connectorMongo'].cleanDB('orders')
-# c.confObj.collectionObjects['connectorMongo'].closeConnection()
+    def prepeareObjects(self):
+        self.createObjects()
+        self.setConnections()
+        self.cleanBases()

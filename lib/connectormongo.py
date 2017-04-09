@@ -22,7 +22,7 @@ class ConnectorMongo(connector.Connector):
             return 'OK'
         except pymongo.errors.ConnectionFailure, e:
             self.conf.collectionObjects['log'].warning(str(e), self)
-            return 'NOT OK'
+            return e
 
     def closeConnection(self):
         if self.isConnect:

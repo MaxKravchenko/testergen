@@ -1,8 +1,14 @@
-from abc import *
-import utils.connector
+from abc import ABCMeta, abstractmethod
 
-class Cleaner(metaclass = ABCMeta):
+class Cleaner():
+    __metaclass__ = ABCMeta
+
+    conf = None
+
+    def __init__(self, confObj):
+        #link on configuration object
+        self.conf = confObj
 
     @abstractmethod
-    def CleanBD(self, connectorObj):
+    def cleanDB(self):
         pass

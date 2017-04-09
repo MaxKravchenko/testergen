@@ -27,7 +27,7 @@ class ConnectorRedis(connector.Connector):
             return 'OK'
         except redis.ConnectionError, e:
             self.conf.collectionObjects['log'].warning(str(e), self)
-            return 'NOT OK'
+            return e
 
     def closeConnection(self):
         if self.isConnect:
