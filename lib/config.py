@@ -73,12 +73,9 @@ class Config(object):
         self.dbRedis = '0'
 
         #File for log
-        self.logFile = '../testergen.log'
+        self.logFile = 'testergen.log'
 
         #collection objects for application
         self.collectionObjects = {'log': None,
                                     'connectorMongo': None,
-                                     'connectorRedis': None,
-                                     'reportHTML': None,
-                                     'reportPDF': None,
-                                     'test1': None}
+                                     'connectorRedis': None}

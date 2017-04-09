@@ -5,6 +5,9 @@ import redis
 class ConnectorRedis(connector.Connector):
     '''Class for connect to Redis'''
 
+    conn = None
+    isConnect = False
+
     def __init__(self, confObj):
         connector.Connector.__init__(self, confObj)
 
@@ -16,6 +19,16 @@ class ConnectorRedis(connector.Connector):
 
     def closeConnection(self):
         pass
+
+    def getDataRequest(self):
+        pass
+
+    def execRequest(self):
+        pass
+
+    def cleanBD(self):
+        pass
+
 
 #test
 #c = classes.config.Config()

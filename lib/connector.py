@@ -15,3 +15,14 @@ class Connector():
     def closeConnection(self):
         pass
 
+    @abstractmethod
+    def getDataRequest(self, nameCollection):
+        pass
+
+    @abstractmethod
+    def execRequest(self, dataCollection, nameCollection):
+        pass
+
+    @abstractmethod
+    def cleanBD(self):
+        pass

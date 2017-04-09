@@ -9,19 +9,21 @@ class Log():
             cls.obj = object.__new__(cls, *args, **kwargs)
         return cls.obj
 
-    def __init__(self, nameLogFile):
+    def __init__(self, confObj):
+        self.conf = confObj
+
         logging.basicConfig(
             level=logging.DEBUG,
             format='%(asctime)s : %(levelname)s : %(message)s',
-            filename=nameLogFile,
+            filename=confObj.logFile,
             filemode='w'
         )
 
-    def debug(message, linkObj):
-        logging.debug(message + type(linkObj))
+    def debug(self, message, linkObj):
+        logging.debug(message + '  ' + str(type(linkObj)))
 
-    def info(message, linkObj):
-        logging.info(message + type(linkObj))
+    def info(self, message, linkObj):
+        logging.info(message + '  ' + str(type(linkObj)))
 
-    def warning(message, linkObj):
-        logging.warning(message + type(linkObj))
+    def warning(self, message, linkObj):
+        logging.warning(message + '  ' + str(type(linkObj)))
