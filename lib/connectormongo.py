@@ -17,18 +17,18 @@ class ConnectorMongo(connector.Connector):
         try:
             self.conn = MongoClient(self.conf.hostMongo, self.conf.portMongo)
             self.conf.collectionObjects['log'].info('set connection is successful', self)
-            isConnect = True
+            self.isConnect = True
+            self.db = self.conn[self.conf.dbMongo]
+            return 'OK'
         except pymongo.errors.ConnectionFailure, e:
             self.conf.collectionObjects['log'].warning(str(e), self)
             return 'NOT OK'
 
-        self.db = self.conn[self.conf.dbMongo]
-        return 'OK'
-
     def closeConnection(self):
         if self.isConnect:
-            self.conn.Close()
+            self.conn.close()
             self.conf.collectionObjects['log'].info('connection closed', self)
+            self.isConnect = False
             return 'OK'
         else:
             self.conf.collectionObjects['log'].warning("connection not closed because connection doesn't exist", self)
@@ -53,7 +53,7 @@ class ConnectorMongo(connector.Connector):
             self.conf.collectionObjects['log'].warning("data didn't insert into collection because connection doesn't exist", self)
             return 'NOT OK'
 
-    def countRowBD(self, nameCollection):
+    def countRowDB(self, nameCollection):
         if self.isConnect:
             collection = self.db[nameCollection]
             self.conf.collectionObjects['log'].info('request (count row) exec ' + nameCollection, self)
@@ -62,9 +62,9 @@ class ConnectorMongo(connector.Connector):
             self.conf.collectionObjects['log'].warning("request didn't exec because connection doesn't exist", self)
             return 'NOT OK'
 
-    def cleanBD(self, nameCollection):
+    def cleanDB(self, nameCollection):
         if self.isConnect:
-            self.conn.drop_collection(nameCollection)
+            self.db.drop_collection(nameCollection)
             self.conf.collectionObjects['log'].info('collection cleaned ' + nameCollection, self)
             return 'OK'
         else:

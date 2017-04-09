@@ -24,5 +24,9 @@ class Connector():
         pass
 
     @abstractmethod
-    def cleanBD(self):
+    def countRowDB(self, nameCollection):
+        pass
+
+    @abstractmethod
+    def cleanDB(self):
         pass
