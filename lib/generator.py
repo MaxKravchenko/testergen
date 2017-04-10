@@ -1,10 +1,10 @@
-import classes.order
-import classes.conf
+import order
+import config
 import random
 import datetime
 import math
-import classes.proj_function
-
+import copy
+import proj_function
 
 class Generator():
     '''Generation data for order'''
@@ -17,6 +17,10 @@ class Generator():
     def genID(self, lastIterable):
         nextID = lastIterable * 21 + math.sin(lastIterable) * 20
         return int(nextID)
+
+    # generation Direct
+    def genStateNewOrder(self):
+        return self.conf.stateOrder['new']
 
     # generation Direct
     def genDirect(self):
@@ -109,31 +113,55 @@ class Generator():
         return round(VolumeF)
 
     # generation order
-    def genOrders(self, lastIterable):
-        # gen data for new orders
-        idOrder = self.genID(lastIterable + 1)
-        stateNewOrder = self.conf.stateOrder['new']
-        instrument = self.genInstrument()
-        dateNewOrder = self.genDate()
-        pxOrder = self.genPx(instrument)
-        volumeOrder = self.genVolume()
-        directOrder = self.genDirect()
-        # gen data for processed orders
-        stateProcessedOrder = self.genState()
-        pxfOrder = self.genPxF(stateProcessedOrder, pxOrder, directOrder)
-        volumefOrder = self.genVolumeF(stateProcessedOrder, volumeOrder)
-        dateProcessedOrder = self.modifyDate(dateNewOrder)
+    def genOrder(self, lastIterable):
+        self.newOrder = order.Order()
+        self.processedOrder = order.Order()
 
-        dictOrders = {'idOrder': idOrder,
-                      'stateNewOrder': stateNewOrder,
-                      'instrument': instrument,
-                      'dateNewOrder': dateNewOrder,
-                      'pxOrder': pxOrder,
-                      'volumeOrder': volumeOrder,
-                      'directOrder': directOrder,
-                      'stateProcessedOrder': stateProcessedOrder,
-                      'pxfOrder': pxfOrder,
-                      'volumefOrder': volumefOrder,
-                      'dateProcessedOrder': dateProcessedOrder}
+        #generation new order
+        self.newOrder.idOrder = self.genID(lastIterable + 1)
+        for field, method in self.conf.mappingFieldMethod.items():
+            if hasattr(self, method):
+                setMethod = getattr(self, method)
+                setattr(self.newOrder, field, setMethod())
+        self.newOrder.pxOrder = self.genPx(self.newOrder.instrument)
 
-        return dictOrders
+        #generation processed order
+        self.processedOrder = copy.copy(self.newOrder)
+        self.processedOrder.stateOrder = self.genState()
+        self.processedOrder.dateOrder = self.modifyDate(self.newOrder.dateOrder)
+        self.processedOrder.pxfOrder = self.genPxF(self.processedOrder.stateOrder,
+                                                    self.newOrder.pxOrder,
+                                                    self.newOrder.directOrder)
+        self.processedOrder.volumefOrder = self.genVolumeF(self.processedOrder.stateOrder, self.newOrder.volumeOrder)
+
+        #add to list
+        orders = [self.newOrder, self.processedOrder]
+        return orders
+
+    def genListOrders(self):
+        listOrders = []
+        for i in range(1, self.conf.countOrders):
+            orders = self.genOrder(i)
+            listOrders.append(orders[0])
+            listOrders.append(orders[1])
+        return listOrders
+
+
+c = config.Config()
+g = Generator(c)
+var = g.genListOrders()
+list = []
+for i in var:
+    list.append('{' + \
+                    'idOrder: ' + str(i.idOrder) + ', ' + \
+                    'stateOrder: ' + str(i.stateOrder) + ', ' + \
+                    'instrument: ' + "'" + i.instrument + "'" + ', ' + \
+                    'dateOrder: ' + "'" + str(i.dateOrder) + "'" + ', ' + \
+                    'pxOrder: ' + str(i.pxOrder) + ', ' + \
+                    'volumeOrder: ' + str(i.volumeOrder) + ', ' + \
+                    'pxfOrder: ' + str(i.pxfOrder) + ', ' + \
+                    'volumefOrder: ' + str(i.volumefOrder) + ', ' + \
+                    'directOrder: ' + "'" + str(i.directOrder) + "'" + \
+                    '}\n')
+
+proj_function.writeFile(list, 'testgen1.txt')

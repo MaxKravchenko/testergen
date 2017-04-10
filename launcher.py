@@ -1,4 +1,6 @@
 import setup
 
 setupObj = setup.Setup()
-setupObj.prepeareObjects()
+resultSetup = setupObj.prepeareObjects()
+if resultSetup == 'NOT OK':
+    print 'Process setup was wrong'

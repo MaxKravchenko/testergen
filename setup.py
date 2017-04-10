@@ -41,6 +41,7 @@ class Setup():
             except Exception as e:
                 print e
                 return 'NOT OK'
+        return 'OK'
 
     def cleanBases(self):
         cleaners = [self.confObj.collectionObjects['cleanerMongo'], self.confObj.collectionObjects['cleanerRedis']]
@@ -49,6 +50,10 @@ class Setup():
         return 'OK'
 
     def prepeareObjects(self):
-        self.createObjects()
-        self.setConnections()
-        self.cleanBases()
+        if self.createObjects() == 'OK':
+            if self.setConnections() == 'OK':
+                if self.cleanBases() == 'OK':
+                    return 'OK'
+                else: return 'NOT OK'
+            else: return 'NOT OK'
+        else: return 'NOT OK'

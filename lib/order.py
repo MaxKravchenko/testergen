@@ -1,6 +1,16 @@
-class Order:
+class Order():
     '''Entity order'''
+    idOrder = None
+    stateOrder = None
+    instrument = None
+    dateOrder = None
+    pxOrder = None
+    volumeOrder = None
+    pxfOrder = None
+    volumefOrder = None
+    directOrder = None
 
+'''
     # setters
     def setIdOrder(self, idOrder):
         if idOrder > 0:
@@ -59,3 +69,4 @@ class Order:
 
     def getDirectOrder(self):
         return self.directOrder
+'''

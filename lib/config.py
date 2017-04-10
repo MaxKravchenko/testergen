@@ -1,6 +1,6 @@
 class Config(object):
     '''Contain parameters for program '''
-    
+
     obj = None
     def __new__(cls, *args, **kwargs):
         if cls.obj is None:
@@ -83,3 +83,9 @@ class Config(object):
                                      'connectorRedis': None,
                                      'cleanerMongo': None,
                                      'cleanerRedis': None}
+        #key - orders field, value - function
+        self.mappingFieldMethod = {'stateOrder': 'genStateNewOrder',
+                                     'instrument': 'genInstrument',
+                                     'dateOrder': 'genDate',
+                                     'volumeOrder': 'genVolume',
+                                     'directOrder': 'genDirect'}
