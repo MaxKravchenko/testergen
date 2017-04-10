@@ -8,6 +8,13 @@ import proj_function
 
 class Generator():
     '''Generation data for order'''
+    collectionOrders = []
+    collectionVolumes = {'fill': 0,
+                         'partialFill': 0,
+                         'reject': 0,
+                         'totalVolume': 0}
+    collectionMiddlePrice = {}
+    countRepeatInstrument = {}
 
     def __init__(self, confObj):
         #link on configuration object
@@ -86,7 +93,7 @@ class Generator():
         if randNum < countFill:
             goalState = self.conf.stateOrder['fill']
         elif randNum >= countFill and randNum <= countPartialFill:
-            goalState = self.conf.stateOrder['partial_fill']
+            goalState = self.conf.stateOrder['partialFill']
         elif randNum > countPartialFill:
             goalState = self.conf.stateOrder['reject']
         return goalState
@@ -108,7 +115,7 @@ class Generator():
             VolumeF = 0
         elif stateOrder == self.conf.stateOrder['fill']:
             VolumeF = volumeOrder
-        elif stateOrder == self.conf.stateOrder['partial_fill']:
+        elif stateOrder == self.conf.stateOrder['partialFill']:
             VolumeF = volumeOrder * self.conf.deltaVolumeForPartialFill
         return round(VolumeF)
 
@@ -139,17 +146,51 @@ class Generator():
         return orders
 
     def genListOrders(self):
-        listOrders = []
+
+        # prepeared collection for indexes
+        for nameState, state in self.conf.stateOrderForIndex.items():
+            for instr in self.conf.listInstrument:
+                self.countRepeatInstrument[nameState + 'count' + str(instr)] = 0
+                self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = 0
+
+        # generate orders and count indexes
         for i in range(1, self.conf.countOrders):
             orders = self.genOrder(i)
-            listOrders.append(orders[0])
-            listOrders.append(orders[1])
-        return listOrders
+            self.collectionOrders.append(orders[0])
+            self.collectionOrders.append(orders[1])
+
+            #count volume for state
+            for nameState, state in self.conf.stateOrderForIndex.items():
+                if getattr(orders[1], 'stateOrder') == state:
+                    self.collectionVolumes[nameState] += orders[1].volumeOrder
+                    #prepare data for count middle price for instrument and state
+                    for instr in self.conf.listInstrument:
+                        if getattr(orders[1], 'instrument') == instr:
+                            self.countRepeatInstrument[nameState + 'count' + str(instr)] += 1
+                            self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] += getattr(orders[1], 'pxOrder')
+
+
+        #count total volume for all orders state
+        self.collectionVolumes['totalVolume'] = self.collectionVolumes['fill'] + self.collectionVolumes['partialFill'] + self.collectionVolumes['reject']
+
+        #count middle price for instrument and state
+        for nameState, state in self.conf.stateOrderForIndex.items():
+            for instr in self.conf.listInstrument:
+                if self.countRepeatInstrument[nameState + 'count' + str(instr)] != 0:
+                    self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = round(self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] / self.countRepeatInstrument[nameState + 'count' + str(instr)], 5)
+                else:
+                    self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = 0
+
 
 
 c = config.Config()
 g = Generator(c)
-var = g.genListOrders()
+g.genListOrders()
+
+print g.collectionVolumes
+print g.collectionMiddlePrice
+print g.countRepeatInstrument
+'''
 list = []
 for i in var:
     list.append('{' + \
@@ -165,3 +206,4 @@ for i in var:
                     '}\n')
 
 proj_function.writeFile(list, 'testgen1.txt')
+'''

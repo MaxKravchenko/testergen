@@ -1,14 +1,18 @@
-from abc import *
-import utils.connector
-import classes.criteria
-import classes.order
+from abc import ABCMeta, abstractmethod
 
-class Repository(metaclass = ABCMeta):
+class Repository():
+    __metaclass__ = ABCMeta
+
+    conf = None
+
+    def __init__(self, confObj):
+        #link on configuration object
+        self.conf = confObj
 
     @abstractmethod
-    def setColecction(self, connectorObj, dataCollection, criteriaObj):
+    def setCollection(self, dataCollection):
         pass
 
     @abstractmethod
-    def getColecction(self, connectorObj, criteriaObj):
+    def getCollection(self):
         return dataCollection

@@ -12,10 +12,13 @@ class Config(object):
         self.countOrders = 1001
         self.stateOrder = {'new': 0,
                            'fill': 1,
-                           'partial_fill': 2,
+                           'partialFill': 2,
                            'reject': 8}
+        self.stateOrderForIndex = {'fill': 1,
+                                   'partialFill': 2,
+                                   'reject': 8}
         self.stateOrderForTest = ('fill',
-                                  'partial_fill',
+                                  'partialFill',
                                   'reject')
         self.stateRange = {'1': 0.6,
                            '2': 0.1,
@@ -82,7 +85,8 @@ class Config(object):
                                     'connectorMongo': None,
                                      'connectorRedis': None,
                                      'cleanerMongo': None,
-                                     'cleanerRedis': None}
+                                     'cleanerRedis': None,
+                                     'generator': None}
         #key - orders field, value - function
         self.mappingFieldMethod = {'stateOrder': 'genStateNewOrder',
                                      'instrument': 'genInstrument',

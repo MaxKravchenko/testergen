@@ -5,7 +5,7 @@ import lib.config as conf
 import lib.connector as connector
 import lib.connectormongo as connectormongo
 import lib.connectorredis as connectorredis
-# import generator
+import lib.generator as generator
 import lib.log as log
 # import repository
 # import repositoryredis
@@ -18,12 +18,15 @@ class Setup():
         self.confObj = conf.Config()
 
     def createObjects(self):
+        #create objects and pull into collection
         self.confObj.collectionObjects['log'] = log.Log(self.confObj)
         self.confObj.collectionObjects['connectorMongo'] = connectormongo.ConnectorMongo(self.confObj)
         self.confObj.collectionObjects['connectorRedis'] = connectorredis.ConnectorRedis(self.confObj)
         self.confObj.collectionObjects['cleanerMongo'] = cleanermongo.CleanerMongo(self.confObj)
         self.confObj.collectionObjects['cleanerRedis'] = cleanerredis.CleanerRedis(self.confObj)
+        self.confObj.collectionObjects['generator'] = generator.Generator(self.confObj)
 
+        #validate created objects
         for nameObj, linkObj in self.confObj.collectionObjects.items():
             if linkObj is not None:
                 self.confObj.collectionObjects['log'].info('Object created successful', linkObj)
