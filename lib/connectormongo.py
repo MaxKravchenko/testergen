@@ -1,4 +1,5 @@
 import connector
+import config
 from pymongo import MongoClient
 
 

@@ -7,9 +7,9 @@ import lib.connectormongo as connectormongo
 import lib.connectorredis as connectorredis
 import lib.generator as generator
 import lib.log as log
-# import repository
-# import repositoryredis
-# import repositorymongo
+import lib.repository as repository
+import lib.repositoryredis as repositoryredis
+import lib.repositorymongo as repositorymongo
 
 class Setup():
     '''Setup objects'''
@@ -25,6 +25,8 @@ class Setup():
         self.confObj.collectionObjects['cleanerMongo'] = cleanermongo.CleanerMongo(self.confObj)
         self.confObj.collectionObjects['cleanerRedis'] = cleanerredis.CleanerRedis(self.confObj)
         self.confObj.collectionObjects['generator'] = generator.Generator(self.confObj)
+        self.confObj.collectionObjects['repositoryMongo'] = repositorymongo.RepositoryMongo(self.confObj)
+        self.confObj.collectionObjects['repositoryRedis'] = repositoryredis.RepositoryRedis(self.confObj)
 
         #validate created objects
         for nameObj, linkObj in self.confObj.collectionObjects.items():

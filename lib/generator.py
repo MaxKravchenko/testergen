@@ -181,29 +181,5 @@ class Generator():
                 else:
                     self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = 0
 
-
-
-c = config.Config()
-g = Generator(c)
-g.genListOrders()
-
-print g.collectionVolumes
-print g.collectionMiddlePrice
-print g.countRepeatInstrument
-'''
-list = []
-for i in var:
-    list.append('{' + \
-                    'idOrder: ' + str(i.idOrder) + ', ' + \
-                    'stateOrder: ' + str(i.stateOrder) + ', ' + \
-                    'instrument: ' + "'" + i.instrument + "'" + ', ' + \
-                    'dateOrder: ' + "'" + str(i.dateOrder) + "'" + ', ' + \
-                    'pxOrder: ' + str(i.pxOrder) + ', ' + \
-                    'volumeOrder: ' + str(i.volumeOrder) + ', ' + \
-                    'pxfOrder: ' + str(i.pxfOrder) + ', ' + \
-                    'volumefOrder: ' + str(i.volumefOrder) + ', ' + \
-                    'directOrder: ' + "'" + str(i.directOrder) + "'" + \
-                    '}\n')
-
-proj_function.writeFile(list, 'testgen1.txt')
-'''
+        #save to MongoDB
+        self.conf.collectionObjects['repositoryMongo'].setCollection(self.collectionOrders)

@@ -1,9 +1,12 @@
-import classes.repository
+import repository
 
-class RepositoryMongo(Repository):
+class RepositoryRedis(repository.Repository):
 
-    def setColecction(self, connectorObj, dataCollection, criteriaObj):
+    def __init__(self, confObj):
+        repository.Repository.__init__(self, confObj)
+
+    def setCollection(self, dataCollection):
         pass
 
-    def getColecction(self, connectorObj, criteriaObj):
+    def getCollection(self):
         return dataCollection
