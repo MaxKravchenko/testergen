@@ -41,8 +41,17 @@ class ConnectorRedis(connector.Connector):
 
     def getDataRequest(self, key):
         if self.isConnect:
-            collection = self.db.get(key)
+            collection = self.db.hvals(key)
             self.conf.collectionObjects['log'].info('data got from key ' + key, self)
+            return collection
+        else:
+            self.conf.collectionObjects['log'].warning("data didn't get from collection because connection doesn't exist", self)
+            return 'NOT OK'
+
+    def getKeys(self):
+        if self.isConnect:
+            collection = self.db.keys('*')
+            self.conf.collectionObjects['log'].info('all keys got ', self)
             return collection
         else:
             self.conf.collectionObjects['log'].warning("data didn't get from collection because connection doesn't exist", self)
@@ -51,7 +60,7 @@ class ConnectorRedis(connector.Connector):
     def execRequest(self, dataCollection, nameCollection):
         if self.isConnect:
             for key, value in dataCollection.items():
-                self.db.set(key, value)
+                self.db.hset(nameCollection, key, value)
             self.conf.collectionObjects['log'].info('data insert ', self)
             return 'OK'
         else:

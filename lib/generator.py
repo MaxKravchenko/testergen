@@ -9,12 +9,6 @@ import proj_function
 class Generator():
     '''Generation data for order'''
     collectionOrders = []
-    collectionVolumes = {'fill': 0,
-                         'partialFill': 0,
-                         'reject': 0,
-                         'totalVolume': 0}
-    collectionMiddlePrice = {}
-    countRepeatInstrument = {}
 
     def __init__(self, confObj):
         #link on configuration object
@@ -145,41 +139,43 @@ class Generator():
         orders = [self.newOrder, self.processedOrder]
         return orders
 
-    def genListOrders(self):
-
+    def createStructuresForRedis(self):
         # prepeared collection for indexes
         for nameState, state in self.conf.stateOrderForIndex.items():
+            setattr(self, nameState, {})
             for instr in self.conf.listInstrument:
-                self.countRepeatInstrument[nameState + 'count' + str(instr)] = 0
-                self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = 0
+                setattr(self, nameState + 'Price' + str(instr), {})
+                # print type(getattr(self, nameState + 'Price' + str(instr)))
+
+
+    def genListOrders(self):
+        # prepeared collection for indexes
+        self.createStructuresForRedis()
 
         # generate orders and count indexes
         for i in range(1, self.conf.countOrders):
             orders = self.genOrder(i)
             self.collectionOrders.append(orders[0])
             self.collectionOrders.append(orders[1])
-
-            #count volume for state
-            for nameState, state in self.conf.stateOrderForIndex.items():
-                if getattr(orders[1], 'stateOrder') == state:
-                    self.collectionVolumes[nameState] += orders[1].volumeOrder
-                    #prepare data for count middle price for instrument and state
-                    for instr in self.conf.listInstrument:
-                        if getattr(orders[1], 'instrument') == instr:
-                            self.countRepeatInstrument[nameState + 'count' + str(instr)] += 1
-                            self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] += getattr(orders[1], 'pxOrder')
-
-
-        #count total volume for all orders state
-        self.collectionVolumes['totalVolume'] = self.collectionVolumes['fill'] + self.collectionVolumes['partialFill'] + self.collectionVolumes['reject']
-
-        #count middle price for instrument and state
-        for nameState, state in self.conf.stateOrderForIndex.items():
-            for instr in self.conf.listInstrument:
-                if self.countRepeatInstrument[nameState + 'count' + str(instr)] != 0:
-                    self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = round(self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] / self.countRepeatInstrument[nameState + 'count' + str(instr)], 5)
-                else:
-                    self.collectionMiddlePrice[nameState + 'midPr' + str(instr)] = 0
+            #generation indexes for redis
+            self.genIndexesForRedis(orders[1])
 
         #save to MongoDB
         self.conf.collectionObjects['repositoryMongo'].setCollection(self.collectionOrders)
+
+        #save to Redis
+        # self.saveIndexesToRedis()
+
+    def genIndexesForRedis(self, order):
+        #volume for state
+        for nameState, state in self.conf.stateOrderForIndex.items():
+            if getattr(order, 'stateOrder') == state:
+                setattr(self, nameState, {getattr(order, 'idOrder'): getattr(order, 'volumeOrder')})
+                #save to Redis
+                self.conf.collectionObjects['repositoryRedis'].setCollection(getattr(self, nameState), nameState)
+                #middle price for instrument and state
+                for instr in self.conf.listInstrument:
+                    if getattr(order, 'instrument') == instr:
+                        setattr(self, nameState + 'Price' + str(instr), {getattr(order, 'idOrder'): getattr(order, 'pxOrder')})
+                        #save to Redis
+                        self.conf.collectionObjects['repositoryRedis'].setCollection(getattr(self, nameState + 'Price' + str(instr)), nameState + 'Price' + str(instr))

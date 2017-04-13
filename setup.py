@@ -10,6 +10,11 @@ import lib.log as log
 import lib.repository as repository
 import lib.repositoryredis as repositoryredis
 import lib.repositorymongo as repositorymongo
+import workflow
+import tests.test as test
+import tests.testAVGprice as testAVGprice
+import tests.testVolume as testVolume
+
 
 class Setup():
     '''Setup objects'''
@@ -27,6 +32,10 @@ class Setup():
         self.confObj.collectionObjects['generator'] = generator.Generator(self.confObj)
         self.confObj.collectionObjects['repositoryMongo'] = repositorymongo.RepositoryMongo(self.confObj)
         self.confObj.collectionObjects['repositoryRedis'] = repositoryredis.RepositoryRedis(self.confObj)
+        self.confObj.collectionObjects['workFlow'] = workflow.WorkFlow(self.confObj)
+        self.confObj.collectionObjects['testAVGprice'] = testAVGprice.TestAVGprice(self.confObj)
+        self.confObj.collectionObjects['testVolume'] = testVolume.TestVolume(self.confObj)
+
 
         #validate created objects
         for nameObj, linkObj in self.confObj.collectionObjects.items():

@@ -88,7 +88,11 @@ class Config(object):
                                      'cleanerRedis': None,
                                      'generator': None,
                                      'repositoryMongo': None,
-                                     'repositoryRedis': None}
+                                     'repositoryRedis': None,
+                                     'testVolume': None,
+                                     'testVolume': None,
+                                     'testAVGprice': None
+                                    }
         #key - orders field, value - function
         self.mappingFieldMethod = {'stateOrder': 'genStateNewOrder',
                                      'instrument': 'genInstrument',

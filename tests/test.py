@@ -1,10 +1,14 @@
-from abc import *
+from abc import ABCMeta, abstractmethod
 
-from classes import config
+class Test():
+    __metaclass__ = ABCMeta
 
+    conf = None
 
-class Test(metaclass = ABCMeta):
+    def __init__(self, confObj):
+        #link on configuration object
+        self.conf = confObj
 
     @abstractmethod
-    def runTest(self, configObj):
+    def runTest(self):
         pass
